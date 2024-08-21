@@ -1,10 +1,5 @@
 import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { runPipeline } from './utils/runPipeline.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
@@ -27,7 +22,7 @@ app.post('/validateEmail', async (req, res) => {
     }
 });
 
-const PORT = 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`Pipeline Server is running on port ${PORT}`);
 });
