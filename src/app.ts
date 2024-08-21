@@ -55,14 +55,19 @@ try {
     process.exit(1);
 }
 
-async function runPipeline(data: unknown, pipelineName: string): Promise<boolean> {
+async function runPipeline(data: unknown, pipelineName: string, maxCost: number): Promise<boolean> {
     const pipelineSteps = config.pipelines[pipelineName];
 
     if (!pipelineSteps) {
         throw new Error(`Pipeline not found: ${pipelineName}`);
     }
 
-    for (const stepName of pipelineSteps) {
+    for (const { step: stepName, cost } of pipelineSteps) {
+        if (cost > maxCost) {
+            console.log(`Skipping step ${stepName} due to cost (${cost}) exceeding max cost (${maxCost})`);
+            continue;
+        }
+
         const [category, step] = stepName.split('.') as [keyof Pipelines, string];
         if (
             !pipelines[category] ||
@@ -71,22 +76,24 @@ async function runPipeline(data: unknown, pipelineName: string): Promise<boolean
         ) {
             throw new Error(`Step not found: ${stepName}`);
         }
-        const func = pipelines[category][step as keyof (typeof pipelines)[typeof category]] as PipelineFunction;
-        const result = await func(data);
+        const pipelineStep = pipelines[category][step as keyof (typeof pipelines)[typeof category]] as PipelineFunction;
+
+        const result = await pipelineStep(data);
         if (!result) return false;
     }
     return true;
 }
 
 app.post('/validateEmail', async (req, res) => {
-    const { email } = req.body;
+    const { email, maxCost } = req.body;
+    console.log(`Running functions for email validation with email: ${email} and max cost: ${maxCost}...`);
 
     if (!email) {
         return res.status(400).json({ error: 'Email is required' });
     }
 
     try {
-        const isValid = await runPipeline(email, 'validateEmail');
+        const isValid = await runPipeline(email, 'validateEmail', maxCost);
         res.json({ isValid });
     } catch (error) {
         console.error('Error in email validation pipeline:', error);

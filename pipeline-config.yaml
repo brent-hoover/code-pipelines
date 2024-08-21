@@ -1,6 +1,10 @@
 pipelines:
   validateEmail:
-    - validateEmail.checkSyntax
-    - validateEmail.checkDomainMX
-    - validateEmail.checkDisposable
-    - validateEmail.checkSpamList
+    - step: validateEmail.checkSyntax
+      cost: 1
+    - step: validateEmail.checkDomainMX
+      cost: 5
+    - step: validateEmail.checkDisposable
+      cost: 3
+    - step: validateEmail.checkSpamList
+      cost: 10

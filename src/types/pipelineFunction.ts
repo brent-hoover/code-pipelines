@@ -6,11 +6,6 @@ interface PipelineConfig {
     };
 }
 
-export interface PipelineFunction {
-    func: (data: unknown) => Promise<boolean> | boolean;
-    cost: number;
-}
-
 interface PipelineStep<T> {
     (data: T): T | Promise<T>;
 }
