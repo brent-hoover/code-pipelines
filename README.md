@@ -8,3 +8,15 @@ It has one endpoint "validateEmail" that takes an email address and a cost. Then
 run all the function defined in the yaml file that are less than the cost defined in the api
 call. (note that this is all mocked checks and API calls to "cat-facts", this will not really validate an email)
 
+## To start
+
+```bash
+npm install
+npm run dev
+```
+
+## To build adn run the docker file
+```bash
+docker build -t pipelines .
+docker run -p 3000:3000 pipelines
+```
