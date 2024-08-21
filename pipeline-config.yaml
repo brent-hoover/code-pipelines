@@ -1,0 +1,6 @@
+pipelines:
+  validateEmail:
+    - validateEmail.checkSyntax
+    - validateEmail.checkDomainMX
+    - validateEmail.checkDisposable
+    - validateEmail.checkSpamList
