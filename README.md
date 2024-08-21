@@ -15,7 +15,7 @@ npm install
 npm run dev
 ```
 
-## To build adn run the docker file
+## To build and run the docker file
 ```bash
 docker build -t pipelines .
 docker run -p 3000:3000 pipelines
